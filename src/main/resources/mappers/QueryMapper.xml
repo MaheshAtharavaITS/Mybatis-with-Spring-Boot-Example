@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.xmlbase.mappers.CommonMovieActorMapper">
+    <update id="createMovieTable" >
+        CREATE TABLE Movie (
+        movieId INT PRIMARY KEY ,
+        title VARCHAR(255) NOT NULL,
+        genre VARCHAR(255) NOT NULL,
+        language VARCHAR(255) NOT NULL
+        );
+    </update>
+
+    <update id="createActorTable">
+        CREATE TABLE Actor (
+        actorId INT PRIMARY KEY,
+        actorName VARCHAR(255) NOT NULL
+
+        );
+    </update>
+
+    <update id="makeRelationMovie_Actor" >
+        CREATE TABLE MovieActor (
+        movieId INT NOT NULL,
+        actorId INT NOT NULL,
+        PRIMARY KEY (movieId, actorId),
+        FOREIGN KEY (movieId) REFERENCES Movie(movieId),
+        FOREIGN KEY (actorId) REFERENCES Actor(actorId)
+        );
+    </update>
+
+    <insert id="insertMovie" parameterType="com.mybatis.xmlbase.domain.Movie">
+        INSERT INTO movie (movieId,title, genre,language) VALUES (#{movieId},#{title}, #{genre}, #{language})
+    </insert>
+    <insert id="insertActor" parameterType="com.mybatis.xmlbase.domain.Actor">
+        INSERT INTO Actor (actorId,actorName) VALUES (#{actorId},#{actorName})
+    </insert>
+    <insert id="insertMovieActor">
+        INSERT INTO MovieActor (movieId, actorId) VALUES (#{movieId}, #{actorId})
+    </insert>
+
+    <update id="updateMovie" parameterType="com.example.mybatisboot.domain.Movie">
+        UPDATE Movie SET title = #{title}, genre = #{genre},language=#{language}  WHERE movieId = #{movieId}
+    </update>
+    <update id="updateActor" parameterType="com.example.mybatisboot.domain.Actor">
+        UPDATE Actor SET actorName = #{actorName} WHERE actorId = #{actorId}
+    </update>
+
+    <select id="selectActorsByMovieId" resultType="com.example.mybatisboot.domain.Actor" >
+        SELECT a.* FROM Actor a INNER JOIN MovieActor ma ON a.actorId = ma.actorId WHERE ma.movieId = #{movieId}
+    </select>
+    <select id="selectMoviesByActorId" resultType="com.example.mybatisboot.domain.Movie">
+        SELECT m.* FROM Movie m INNER JOIN MovieActor ma ON m.movieId = ma.movieId WHERE ma.actorId = #{actorId}
+    </select>
+
+    <select id="selectMovieById" resultType="com.example.mybatisboot.domain.Movie">
+        SELECT * FROM Movie WHERE movieId = #{movieId}
+    </select>
+    <select id="selectActorById" resultType="com.example.mybatisboot.domain.Actor">
+        SELECT * FROM Actor WHERE actorId = #{actorId}
+    </select>
+
+    <delete id="deleteMovie">DELETE FROM Movie WHERE movieId = #{movieId}</delete>
+    <delete id="deleteMovieActors">DELETE FROM MovieActor WHERE movieId = #{movieId}</delete>
+
+    <delete id="deleteActor">DELETE FROM Actor WHERE actorId = #{actorId}</delete>
+    <delete id="deleteActorMovies">DELETE FROM MovieActor WHERE actorId = #{actorId}</delete>
+</mapper>
