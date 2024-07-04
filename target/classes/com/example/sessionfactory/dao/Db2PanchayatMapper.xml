@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sessionfactory.dao.Db2PanchayatMapper">
+
+    <resultMap id="PanchayatResultMap" type="com.example.sessionfactory.domain.Panchayat">
+        <id property="panchayatNo" column="panchayatNo"/>
+        <result property="panchayatName" column="panchayatName"/>
+        <result property="panchayatAddress" column="panchayatAddress"/>
+        <result property="panchayatMemberList" column="panchayatMembers" typeHandler="com.example.sessionfactory.typehandler.JsonbTypeHandler"/>
+    </resultMap>
+
+
+    <update id="createPanchayatTable">
+        CREATE TABLE panchayat (
+        panchayatNo SERIAL PRIMARY KEY,
+        panchayatName VARCHAR(255) NOT NULL,
+        panchayatAddress VARCHAR(255) NOT NULL,
+        panchayatMembers JSONB NOT NULL
+        );
+    </update>
+    <select id="findAll" resultMap="PanchayatResultMap">
+        SELECT
+        p.panchayatno AS panchayatNo,
+        p.panchayatname AS panchayatName,
+        p.panchayataddress AS panchayatAddress,
+        p.panchayatmembers AS panchayatMembers
+        FROM
+        Panchayat p
+    </select>
+    <insert id="insertPanchayat" parameterType="com.example.sessionfactory.domain.Panchayat">
+        INSERT INTO panchayat (panchayatNo,panchayatName, panchayatAddress, panchayatMembers)
+        VALUES (#{panchayat.panchayatNo},#{panchayat.panchayatName}, #{panchayat.panchayatAddress}, #{panchayat.panchayatMemberList, typeHandler=com.example.sessionfactory.typehandler.JsonbTypeHandler})
+    </insert>
+    <select id="getPanchayatById" resultMap="PanchayatResultMap">
+        SELECT panchayatNo, panchayatName, panchayatAddress, panchayatMembers
+        FROM panchayat
+        WHERE panchayatNo = #{panchayatNo}
+    </select>
+    <update id="updatePanchayat" parameterType="com.example.sessionfactory.domain.Panchayat">
+        UPDATE panchayat
+        SET panchayatName = #{panchayatName},
+        panchayatAddress = #{panchayatAddress},
+        panchayatMembers = #{panchayatMemberList, typeHandler=com.example.sessionfactory.typehandler.JsonbTypeHandler}
+        WHERE panchayatNo = #{panchayatNo}
+    </update>
+    <delete id="deletePanchayat" parameterType="java.lang.Integer">
+        DELETE FROM Panchayat
+        WHERE panchayatno = #{panchayatNo}
+    </delete>
+
+</mapper>

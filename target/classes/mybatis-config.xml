@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        'http://mybatis.org/dtd/mybatis-3-config.dtd'>
+<configuration>
+   <!-- <properties resource='jdbc.properties'/>-->
+    <typeAliases>
+        <typeAlias alias='panchayat' type='com.example.sessionfactory.domain.Panchayat' ></typeAlias>
+    </typeAliases>
+    <typeHandlers>
+        <typeHandler handler="com.example.sessionfactory.typehandler.JsonbTypeHandler" javaType="java.util.List" jdbcType="OTHER"/>
+    </typeHandlers>
+    <environments default='development'>
+        <environment id='development'>
+            <transactionManager type='JDBC'/>
+            <dataSource type='POOLED'>
+                <property name="driver" value="org.postgresql.Driver"/>
+                <property name='url' value='jdbc:postgresql://localhost:5432/Db1Mapper'/>
+                <property name='username' value='postgres'/>
+                <property name='password' value='root'/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource='com/example/sessionfactory/dao/Db1PanchayatMapper.xml'/>
+        <mapper resource='com/example/sessionfactory/dao/DeleteRecordMapper.xml'/>
+    </mappers>
+</configuration>

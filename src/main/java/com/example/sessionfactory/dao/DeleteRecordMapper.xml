@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sessionfactory.dao.DeleteRecordMapper">
+    <resultMap id="DeleteRecordResultMap" type="com.example.sessionfactory.domain.DeleteRecord">
+        <id property="id" column="id"/>
+        <result property="originalId" column="original_id"/>
+        <result property="entityName" column="entity_name"/>
+        <result property="deleteAt" column="delete_at"/>
+    </resultMap>
+    <update id="createTable" statementType="STATEMENT">
+        CREATE TABLE IF NOT EXISTS delete_record (
+        id SERIAL  PRIMARY KEY,
+        original_id BIGINT NOT NULL,
+        entity_name VARCHAR(255) NOT NULL,
+        delete_at TIMESTAMP NOT NULL
+        );
+    </update>
+    <insert id="insertDeleteRecord" parameterType="com.example.sessionfactory.domain.DeleteRecord">
+        INSERT INTO delete_record (original_id, entity_name, delete_at)
+        VALUES (#{originalId}, #{entityName}, #{deleteAt})
+    </insert>
+    <delete id="deleteDeletedRecordById" parameterType="java.lang.Long">
+        DELETE FROM delete_record
+        WHERE id = #{id}
+    </delete>
+    <select id="findAll" resultMap="DeleteRecordResultMap">
+        SELECT * FROM delete_record
+    </select>
+</mapper>
